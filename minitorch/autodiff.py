@@ -22,7 +22,23 @@ def central_difference(f: Any, *vals: Any, arg: int = 0, epsilon: float = 1e-6) 
     Returns:
         An approximation of $f'_i(x_0, \ldots, x_{n-1})$
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    # TODO: Implement for Task 1.1.
+    # raise NotImplementedError("Need to implement for Task 1.1")
+    tmp = list(vals)
+    tmp[arg] += epsilon
+    tmp = tuple(tmp)
+    originf = f(*vals)
+    deltaf = f(*tmp)
+    if type(deltaf) == list or type(deltaf) == tuple:
+        if len(deltaf) == 1:
+            return (deltaf[0] - originf[0]) / epsilon
+        else:
+            ans = []
+            for i in range(len(deltaf)):
+                ans.append((deltaf[i] - originf[i]) / epsilon)
+    elif type(deltaf) == float or type(deltaf) == int:
+        return (deltaf - originf) / epsilon
+    # return 0.0
 
 
 variable_count = 1
@@ -60,7 +76,27 @@ def topological_sort(variable: Variable) -> Iterable[Variable]:
     Returns:
         Non-constant Variables in topological order starting from the right.
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    # TODO: Implement for Task 1.4.
+    # raise NotImplementedError("Need to implement for Task 1.4")
+    ans = []
+    ansstack = []
+    DFS(variable, ansstack)
+    for var in ansstack:
+        ans.append(var)
+    return iter(ans)
+
+
+def DFS(variable: Variable, stack: List[Variable]) -> None:
+    if variable.is_leaf():
+        stack.append(variable)
+        return
+    if variable.is_constant():
+        return
+    parlist = variable.parents()
+    for var in parlist:
+        DFS(var, stack)
+    stack.append(variable)
+    return
 
 
 def backpropagate(variable: Variable, deriv: Any) -> None:
@@ -74,7 +110,21 @@ def backpropagate(variable: Variable, deriv: Any) -> None:
 
     No return. Should write to its results to the derivative values of each leaf through `accumulate_derivative`.
     """
-    raise NotImplementedError("Need to include this file from past assignment.")
+    # TODO: Implement for Task 1.4.
+    # raise NotImplementedError("Need to implement for Task 1.4")
+    DFS4BP(variable, deriv)
+
+
+def DFS4BP(variable: Variable, deriv: Any) -> None:
+    if variable.is_leaf():
+        variable.accumulate_derivative(deriv)
+        return
+    if variable.is_constant():
+        return
+    parlist = variable.chain_rule(deriv)
+    for var, delta in parlist:
+        DFS4BP(var, delta)
+    return
 
 
 @dataclass

@@ -176,10 +176,10 @@ class Tensor:
         return Neg.apply(self)
 
     def __radd__(self, b: TensorLike) -> Tensor:
-        return self + b
+        return self + self._ensure_tensor(b)
 
     def __rmul__(self, b: TensorLike) -> Tensor:
-        return self * b
+        return self * self._ensure_tensor(b)
 
     def all(self, dim: Optional[int] = None) -> Tensor:
         if dim is None:
